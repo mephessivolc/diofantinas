@@ -14,8 +14,6 @@ class Diofante:
         self.numbers = Restrited(numbers[1:])
         self.time_init = timeit.default_timer()
         self.resp = ''
-        self.header = ''
-        self.footer = ''
 
         self.calc()
 
@@ -30,73 +28,64 @@ class Diofante:
         """
 
         numbers = self.numbers.int_treatment()
-        self.resp += "Numeros: {}\n".format(numbers).replace('[', '').replace(']','')
-        self.resp += '\n{}\n'.format('Calculando')
+        self.resp += "Numeros: {}\n".format(numbers).replace('[', '').replace(']','') # Para impressão nos meios tela/arquivo
+        self.resp += '\n{}\n'.format('Calculando') # Para impressão nos meios tela/arquivo
+        A = np.identity(len(numbers))
 
         if not self.numbers.verify():
             self.resp += self.numbers.take_message() + "\n"
-        else:
-            self.resp += "\n{}\n".format('Sem nada para Calcular ainda' )
 
+        b = [] # matriz utilizado
+        vec_float = [] # vetor suporte
 
-        matrix = []
-        comp=True
-        vec = numbers
-        for j in numbers:
-            vec = vector(vec, comp=comp)
-            matrix.append(vec)
-            comp = False
+        vec_int = []
+        for i in numbers[1:]:
+            calc = float(i)/numbers[0]
+            vec_int.append(int(calc))
+            vec_float.append(calc)
 
-        print(matrix)
+        b.append(vec_int)
 
-        # numpy: np.transpose() - transpor uma matriz
+        qtd = len(numbers)
+        for i in range(qtd):
+            cont = (vec_float[0]-b[i][0])
+            vec_int = []
+            vec_sup = []
 
-    def create_file(self):
+            for j in range(1,len(b[i])):
+                valor = (vec_float[j]-b[i][j])/cont
+                vec_int.append(int(valor))
+                vec_sup.append(valor)
+
+            vec_int.append(int(1/cont))
+            vec_float = vec_sup
+            vec_float.append(1/cont)
+            b.append(vec_int)
+
+        b = np.array(b)
+
+        for i in range(qtd):
+            for j in range(len(b[i])):
+                soma = A[i][j]
+                for k in range(qtd-1):
+                    soma = soma + b[k][j] * A[i][(k+j) % qtd]
+                    print("b[{}][{}] = {}; A[{}][{}] = {}; soma = {}".format(k,j,b[k][j],i,(k+j)%qtd,A[i][(k+j) % qtd], soma))
+                A[i][j] = soma
+
+        self.resp += 'b = \n{}\n\nmatriz A =\n{}'.format(b, A)
+        
+
+    def show(self):
 
         info = self.numbers_not_treated
 
         if "-f" in info:
             name = info[info.index('-f') + 1]
-            if '.tex' in name:
-                self.header = create_header_tex()
-
-
-                self.footer = "\end{document}"
-
-            file_name = name
-
-            with open(name, 'w') as file_open:
-                file_open.write(self.header)
-                file_open.write(self.resp)
-                file_open.write(self.footer)
 
         else:
             print(self.resp)
 
-def create_header_tex():
-    msg = r"\documentclass[a4,12pt]{article}"+"\n"
-    msg += r"\usepackage[brazil]{babel}"+"\n"
-    msg += r"\usepackage{amssymb}"+"\n"
-    msg += r"\usepackage[utf8]{inputenc}"+"\n"
-    msg += r"\begin{document}"+"\n"
-
-    return msg
-
-def vector(a, comp=False):
-    print(a)
-    vector = []
-    length = len(a[1:])
-    for i in range(length):
-        if not comp and i != length:
-            vector.append(int(i/a[0]))
-        else:
-            vector.append(1)
-
-    return vector
-
-
 if __name__ == "__main__":
 
-
     diofante = Diofante(sys.argv)
-    diofante.create_file()
+    diofante.show()
