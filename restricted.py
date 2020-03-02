@@ -24,7 +24,7 @@ class Restricted:
         """
         try:
             lst = []
-            for num in self.args[1:]:
+            for num in self.args:
                 _num = int(num)
                 if _num > 0:
                     lst.append(int(num)) # lista de numeros inteiros
@@ -34,7 +34,7 @@ class Restricted:
         except BaseException as error:
             raise(error)
 
-    def order(self):
+    def ordered(self):
         """
             Retora a lista de numeros em ordem crescente, referente a restricao
             item b)
@@ -52,7 +52,7 @@ class Restricted:
         """
             Retorna os numeros inseridos e verificados nas condicoes
         """
-        return self.order()
+        return self.ordered()
 
     def isrestricted(self):
 
@@ -60,10 +60,12 @@ class Restricted:
             Retorn os numeros confirmados pela restricao
 
         """
-        if not prime.verify_prime(self.take_numbers()):
-            return None
+        _tmp = prime.create_prime_number_list(self.take_numbers())
+        for i in self.take_numbers():
+            if i not in _tmp:
+                return None
 
-        return self.take_numbers()
+        return self.ordered()
 
 if __name__ == "__main__":
     arg = Restricted(sys.argv[1:])
