@@ -30,8 +30,8 @@ def create_prime_number_list(num):
             _num = int(num)
         elif isinstance(num, dict):
             _num = int(max(num.values()))
-    except:
-        raise
+    except BaseException as error:
+        raise(error)
 
     while n < _num+1:
         if verify_prime(n):
