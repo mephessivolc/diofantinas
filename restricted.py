@@ -1,4 +1,5 @@
 import prime
+import sys
 
 class Restricted:
 
@@ -47,36 +48,23 @@ class Restricted:
         """
         return max(self.numbers)
 
-    def verify_prime_between_numbers(self):
-        """
-            Verifica se todos os numeros da lista sao primos entre si, referente
-            a restricao item c)
-        """
-        _lst_num = self.order() # lista de numeros inseridos
-        _qty_lst_num = len(self.order()) # quantidade de numeros inseridos
-
-        for i in range(_qty_lst_num-1):
-            for j in range(i+1, _qty_lst_num):
-                if prime.verify_prime_between_numbers(_lst_num[i], _lst_num[j]):
-                    return False
-
-        return True
-
-    def is_conditioned(self):
-        """
-            Verifica se a lista inserida esta nas condicoes exigidas
-        """
-        if not self.verify_prime_between_numbers():
-            print("Nao esta condicionado")
-            return False
-
-        return True
-
     def take_numbers(self):
         """
             Retorna os numeros inseridos e verificados nas condicoes
         """
-        if not self.is_conditioned():
-            return
-
         return self.order()
+
+    def isrestricted(self):
+
+        """
+            Retorn os numeros confirmados pela restricao
+
+        """
+        if not prime.verify_prime(self.take_numbers()):
+            return None
+
+        return self.take_numbers()
+
+if __name__ == "__main__":
+    arg = Restricted(sys.argv[1:])
+    print(arg.isrestricted())
