@@ -1,57 +1,52 @@
 import sys
+import numpy as np
 
 from restricted import Restricted
 
+def vec(numbers): # vetor formado por numeros tipo int
+    vec = [] # vetor b do trabalho do Juscimar
+    vec_a = [] # vetor a do trabalho do Juscimar
 
-def vectors(vec, div=None):
-    _vec_a = []
-    _vec_b = []
-    if not div is None:
-        for i in range(1, len(vec)):
-            num = float(vec[i]) / vec[0]
-            _vec_a.append(num)
-            _vec_b.append(int(num))
+    tmp = [] # entradas para o vetor vec
+    tmp_a = [] # entradas para o vetor vec_a
+    for i in numbers[1:]:
+        num = i/numbers[0]
+        tmp_a.append(num)
+        tmp.append(int(num))
 
-    else:
-        for i in range(1, len(vec)):
-            num = float(vec[i]) / vec[0]
-            _vec_a.append(num)
-            _vec_b.append(int(num))
+    vec_a.append(tmp_a)
+    vec.append(tmp)
 
-    return (_vec_a, _vec_b)
+    for i in range(len(numbers)-1):
+        tmp = []
+        tmp_a = []
+
+        div = 1/(vec_a[i][0]-vec[i][0])
+
+        for j in range(1,len(vec[i])):
+            calc = div * (vec_a[i][j]-vec[i][j])
+            tmp_a.append(calc)
+            tmp.append(int(calc))
+
+        tmp_a.append(1*div)
+        tmp.append(int(1*div))
+        vec_a.append(tmp_a)
+        vec.append(tmp)
+
+    # return (vec, vec_a,1/(vec_a[0][0]-vec[0][0])*(vec_a[0][1]-vec[0][1]))
+    return vec
 
 class Diofante:
 
     def __init__(self, argv):
-        args = Restricted(argv)
-        self.numbers = args.take_numbers()
-        self.resp = ''
+        args = Restricted(argv[1:])
+        self.numbers = args.isrestricted()
 
-    def trans_a(self):
-        """
-            Retorna a matriz transformacao de a (matriz de Perron em 2.3.3)
-        """
-
-        _vec_a = vectors(self.numbers)[0]
-        _vec_b = vectors(self.numbers)[1]
-
-        print("vec_a = {}; vec_b = {}".format(_vec_a, _vec_b))
-        for i in range(1,len(self.numbers)):
-            div = 1/(_vec_a[i-1][0]-_vec_b[i-1][0])
-            aux = []
-            for j in range(_vec_b[i]):
-                aux.append(j/div)
-
-            _vec_a.append(vectors(aux)[0])
-            _vec_b.append(vectors(aux)[1])
-
-        print(_vec_b)
-        return _vec_b
+    def take_vec(self):
+        return vec(self.numbers)
 
     def show(self):
-        # print(self.trans_a())
-        print(self.numbers)
-
+        print(self.take_vec())
 
 if __name__ == '__main__':
     t = Diofante(sys.argv)
