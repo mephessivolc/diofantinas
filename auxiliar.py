@@ -1,5 +1,11 @@
+"""
+    Funcoes auxiliares para o calculo das equacoes diofantinas
+"""
 
 def vec(numbers): # vetor formado por numeros tipo int
+    """
+        Construção do vetor transformacao (matriz b)
+    """
     vec = [] # vetor b do trabalho do Juscimar
     vec_a = [] # vetor a do trabalho do Juscimar
 
