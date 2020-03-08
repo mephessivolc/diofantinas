@@ -1,6 +1,7 @@
 """
     Funcoes auxiliares para o calculo das equacoes diofantinas
 """
+import numpy
 
 def vec(numbers): # vetor formado por numeros tipo int
     """
@@ -37,3 +38,20 @@ def vec(numbers): # vetor formado por numeros tipo int
 
     # return (vec, vec_a,1/(vec_a[0][0]-vec[0][0])*(vec_a[0][1]-vec[0][1]))
     return vec
+
+def matrix(matrix_b, order=4):
+
+    """
+        Calculo da Matriz A
+        A_i^(v+n) = A_i^(v) + Sum_(j=1)^(n-1) (b_j^(v)A_i^(v+j))
+    """
+    m = numpy.identity(order, dtype= int)
+    for v in range(order):
+        for i in range(order):
+            calc = 0
+            for j in range(1, order - 1):
+                calc = calc + matrix_b[v][j]*m[j][i]
+
+            m[v][i] = m[v][i]+calc
+
+    return m
