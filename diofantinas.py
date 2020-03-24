@@ -1,6 +1,6 @@
 import sys
 import numpy as np
-import auxiliar
+import aux
 
 from restricted import Restricted
 
@@ -15,14 +15,14 @@ class Diofante:
         """
             Cria a matriz b de valores inteiros
         """
-        vec = np.array(auxiliar.vec(self.numbers))
+        vec = np.array(aux.vec(self.numbers))
         return vec
 
     def take_matrix(self):
         """
             Cria a matriz A de valores
         """
-        matrix = auxiliar.matrix(self.take_vec(), self.order)
+        matrix = aux.matrix(self.take_vec(), self.order)
 
         return matrix
 

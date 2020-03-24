@@ -44,14 +44,19 @@ def matrix(matrix_b, order=4):
     """
         Calculo da Matriz A
         A_i^(v+n) = A_i^(v) + Sum_(j=1)^(n-1) (b_j^(v)A_i^(v+j))
+        order = n (do trabalho escrito)
     """
-    m = numpy.identity(order, dtype= int)
+    a = numpy.identity(order, dtype= int)
     for v in range(order):
         for i in range(order):
             calc = 0
-            for j in range(1, order - 1):
-                calc = calc + matrix_b[v][j]*m[j][i]
+            resp = "A[{}][{}] = A[{}][{}] + ".format( i,(v+order) % order, i, v)
+            for j in range(order - 1):
+                # print("a[{}][{}], matrix_b[{}][{}]={}, a[{}][{}]={}".format(v, i, v, j,matrix_b[v][j], (v+j) % 4, i, a[(v+j) % 4][i]))
+                resp = resp + "b[{}][{}]*A[{}][{}] + ".format(j,v,i,(v+j)%order)
+                calc = calc + matrix_b[j][v]*a[i][(v+j) % order]
 
-            m[v][i] = m[v][i]+calc
+            print(resp)
+            a[i][(v+order) % order] = a[i][v]+calc
 
-    return m
+    return a
