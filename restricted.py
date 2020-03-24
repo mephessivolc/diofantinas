@@ -27,12 +27,12 @@ class Restricted:
             for num in self.args:
                 _num = int(num)
                 if _num > 0:
-                    lst.append(int(num)) # lista de numeros inteiros
-
-            return lst
+                    lst.append(_num) # lista de numeros inteiros
 
         except BaseException as error:
             raise(error)
+
+        return lst
 
     def ordered(self):
         """
