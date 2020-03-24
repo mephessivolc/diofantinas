@@ -54,18 +54,18 @@ class Restricted:
         """
         return self.ordered()
 
-    def isrestricted(self):
-
-        """
-            Retorn os numeros confirmados pela restricao
-
-        """
-        _tmp = prime.create_prime_number_list(self.take_numbers())
-        for i in self.take_numbers():
-            if i not in _tmp:
-                return None
-
-        return self.ordered()
+    # def isrestricted(self):
+    #
+    #     """
+    #         Retorn os numeros confirmados pela restricao
+    #
+    #     """
+    #     _tmp = prime.create_prime_number_list(self.take_numbers())
+    #     for i in self.take_numbers():
+    #         if i not in _tmp:
+    #             return None
+    #
+    #     return self.ordered()
 
 if __name__ == "__main__":
     arg = Restricted(sys.argv[1:])
