@@ -1,6 +1,7 @@
 """
     Funcoes auxiliares para o calculo das equacoes diofantinas
 """
+from math import floor, ceil
 import numpy
 
 def vec(numbers): # vetor formado por numeros tipo int
@@ -29,14 +30,22 @@ def vec(numbers): # vetor formado por numeros tipo int
         for j in range(1,len(vec[i])):
             calc = div * (vec_a[i][j]-vec[i][j])
             tmp_a.append(calc)
-            tmp.append(int(calc))
+            # tmp.append(int(calc)) # somente o numero inteiro
+            # tmp.append(round(calc)) # arredondamento para o inteiro mais proximo
+            tmp.append(int(round(calc)))
+            # tmp.append(floor(calc)) # arredondamento sempre para baixo
+            # tmp.append(ceil(calc)) # arredondamento para cima
 
-        tmp_a.append(1*div)
-        tmp.append(int(1*div))
+        tmp_a.append(div)
+        # tmp.append(int(div))
+        # tmp.append(round(div))
+        # tmp.append(floor(div))
+        # tmp.append(ceil(div))
+        tmp.append(int(round(div)))
+
         vec_a.append(tmp_a)
         vec.append(tmp)
 
-    # return (vec, vec_a,1/(vec_a[0][0]-vec[0][0])*(vec_a[0][1]-vec[0][1]))
     return vec
 
 def matrix(matrix_b, order=4):
@@ -47,16 +56,21 @@ def matrix(matrix_b, order=4):
         order = n (do trabalho escrito)
     """
     a = numpy.identity(order, dtype= int)
-    for v in range(order):
-        for i in range(order):
-            calc = 0
-            resp = "A[{}][{}] = A[{}][{}] + ".format( i,(v+order) % order, i, v)
-            for j in range(order - 1):
-                # print("a[{}][{}], matrix_b[{}][{}]={}, a[{}][{}]={}".format(v, i, v, j,matrix_b[v][j], (v+j) % 4, i, a[(v+j) % 4][i]))
-                resp = resp + "b[{}][{}]*A[{}][{}] + ".format(j,v,i,(v+j)%order)
-                calc = calc + matrix_b[j][v]*a[i][(v+j) % order]
 
-            print(resp)
-            a[i][(v+order) % order] = a[i][v]+calc
+    # print("n = {}\nb = \n{}\nA = \n{}".format(order, matrix_b, a))
+    for i in range(order):
+        for v in range(order):
+            div = (v+order) % order
+            # resp = "A[{}][{}] = A[{}][{}] + ".format(i, div, i, v)
+            # resp1 = "A[{}][{}] = {} + ".format(i,div, a[i][div])
+            calc = 0
+            for j in range(order-1):
+                div1 = (v+j+1) % order
+                # resp = resp + "b[{}][{}]*A[{}][{}] + ".format(v, j, i, div1)
+                # resp1 = resp1 + "{} * {} + ".format(matrix_b[v][j], a[i][div1])
+                calc = calc + matrix_b[v][j] * a[i][div1]
+            a[i][div] = a[i][v] + calc
+            # print("{}".format(resp))
+            # print("{}".format(resp1))
 
     return a
