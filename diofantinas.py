@@ -61,7 +61,7 @@ class Diofante:
 
         return resp
 
-    def print_latex(self):
+        def print_latex(self):
         pdf = pylatex.Document("default")
 
         with pdf.create(pylatex.Section("Equações Diofantinas")) as section:
