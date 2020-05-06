@@ -1,4 +1,5 @@
 import sys
+import math
 import numpy as np
 import aux
 import pylatex
@@ -42,6 +43,24 @@ class Diofante:
 
         return matrix
 
+    def det_matrix(self):
+        return np.linalg.det(self.take_matrix())
+
+    def cofactor_matrix(self):
+        resp = []
+        for i in range(self.order):
+            _matrix = aux.cofactor(self.take_matrix(), (i,self.order-1))
+            _resp = math.pow(-1,12) * np.linalg.det(_matrix) * math.pow(-1, i*(self.order-1))
+            print("Cof(A)[{},{}] = \n{}\nDet(Cof(A)[{},{}]) = {}".format(
+                    i, self.order-1, _matrix,
+                    i, self.order-1, round(_resp)
+                ))
+
+            resp.append(int(round(_resp)))
+
+
+        return resp
+
     def print_latex(self):
         pdf = pylatex.Document("default")
 
@@ -77,11 +96,15 @@ class Diofante:
         pdf.generate_tex()
 
     def show(self):
+
         if self.in_latex:
             self.print_latex()
 
         else:
-            print("n = {}\n\nb =\n{}\n\na =\n{}".format(self.order, self.take_vec(), self.take_matrix()))
+            resp = "n = {}\n\nb =\n{}\n\nA =\n{}\n".format(self.order, self.take_vec(), self.take_matrix())
+            resp = resp + "\nCofatora(A,({},{})) =\n{}".format(1,1,self.cofactor_matrix())
+
+            print(resp)
 
 if __name__ == '__main__':
     t = Diofante(sys.argv)

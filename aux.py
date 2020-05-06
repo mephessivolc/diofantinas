@@ -74,3 +74,10 @@ def matrix(matrix_b, order=4):
             # print("{}".format(resp1))
 
     return a
+
+def cofactor(A,lc =(0,0)):
+
+    newMatrix = numpy.delete(A, lc[0], axis=0)
+    newMatrix = numpy.delete(newMatrix, lc[1], axis=1)
+
+    return newMatrix
