@@ -1,6 +1,8 @@
 import prime
 import sys
 
+initial_numbers=[0, 37, 89, 131, 401]
+
 class Restricted:
 
     """
@@ -13,9 +15,11 @@ class Restricted:
         e)
     """
 
-    def __init__(self, args):
-        self.args = args # valores recebidos tipo string
-        self.numbers = self.take_numbers()
+    def __init__(self, argv):
+        if len(argv) == 1:
+            argv = initial_numbers
+
+        self.args = argv[1:] # valores recebidos tipo string
 
     def change_int_numbers(self):
         """
@@ -46,27 +50,33 @@ class Restricted:
         """
             Retorna o maior valor inserido na lista de numeros
         """
-        return max(self.numbers)
+        return max(self.change_int_numbers())
 
     def take_numbers(self):
         """
             Retorna os numeros inseridos e verificados nas condicoes
         """
-        return self.ordered()
+        if self.is_prime():
+            return self.ordered()
 
-    # def isrestricted(self):
-    #
-    #     """
-    #         Retorn os numeros confirmados pela restricao
-    #
-    #     """
-    #     _tmp = prime.create_prime_number_list(self.take_numbers())
-    #     for i in self.take_numbers():
-    #         if i not in _tmp:
-    #             return None
-    #
-    #     return self.ordered()
+        return []
+
+    def is_prime(self):
+        """
+            Retorna verdadeiro se sao numeros primos ou primos entre si
+        """
+
+        resp = True
+        for i in range(len(self.ordered())):
+            for j in self.ordered()[i+1:]:
+                if not prime.verify_prime_between_numbers(self.ordered()[i],j):
+                    resp = False
+
+        if not resp:
+            return False
+
+        return True
 
 if __name__ == "__main__":
-    arg = Restricted(sys.argv[1:])
-    print(arg.isrestricted())
+    arg = Restricted(sys.argv)
+    print(arg.take_numbers())
