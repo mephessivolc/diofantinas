@@ -1,13 +1,11 @@
 """
     Funcoes auxiliares para o calculo das equacoes diofantinas
 """
-from math import floor, ceil
-import numpy
+import numpy as np
 
 decimal_places = 20
 
 def vec(numbers): # vetor formado por numeros tipo int
-
 
     vec = [] # vetor b do trabalho do Juscimar
     vec_a = [] # vetor a do trabalho do Juscimar
@@ -43,36 +41,49 @@ def vec(numbers): # vetor formado por numeros tipo int
         vec_a.append(tmp_a)
         i=i+1
 
-    return vec
-    
-def matrix(matrix_b, order=4):
+    return np.array(vec)
 
+def matrix(b, n=4):
     """
-        Calculo da Matriz A
-        A_i^(v+n) = A_i^(v) + Sum_(j=1)^(n-1) (b_j^(v)A_i^(v+j))
+        Retorna o calculo da matriz A
+        A_i^(v+n) = A_i^(v) + Sum_(j=1)^(n-1) [b_j^(v)*A_i^(v+j)]
         order = n (do trabalho escrito)
+
+        valores de entrada:
+        b = matriz b de valores
+        n = ordem
     """
-    a = numpy.identity(order, dtype= int)
+    lin_b = b.shape[0] # obtendo a quantidade de linhas da matriz b
 
-    for i in range(order):
-        for v in range(order):
-            div = (v+order) % order
-            calc = 0
-            for j in range(order-1):
-                div1 = (v+j+1) % order
-                calc = calc + matrix_b[v][j] * a[i][div1]
-            a[i][div] = a[i][v] + calc
+    # Contruindo a matrix A[order, order + lin_b]
+    m = np.eye(n, dtype=int) # bloco de matriz identidade de ordem B[order, order]
+    m = np.c_[m, np.zeros((n, lin_b), dtype=int)] # adicionando um segundo bloco de matriz nula de ordem B[order, lin_b]
 
-    return a
+    for i in range(n): # linhas
+        for v in range(lin_b): # colunas
+            calc = m[i][v]
+            for j in range(n-1): # j do trabalho
+                calc = calc + b[v][j] * m[i][v+j+1]
 
-def cofactor(A,lc =(0,0)):
+            m[i][v+n] = calc
 
-    newMatrix = numpy.delete(A, lc[0], axis=0)
-    newMatrix = numpy.delete(newMatrix, lc[1], axis=1)
+    print(m)
+    m = np.delete(m, np.s_[0:-n], axis=1) # retirando as primeiras colunas, mantendo as n ultimas
+
+    return m
+
+def cofactor(A, lc =(0,0)):
+
+    newMatrix = np.delete(A, lc[0], axis=0)
+    newMatrix = np.delete(newMatrix, lc[1], axis=1)
 
     return newMatrix
 
 
 if __name__ == "__main__":
-    initial_numbers=[37, 89, 131, 401]
-    print(numpy.array(vec(initial_numbers)[0]))
+    # initial_numbers=[37, 89, 131, 401] # para teste da funcao vec
+
+    # para teste da funcao matrix
+    # initial_numbers = np.array([[2,3,5],[4,3,4],[0,1,1],[1,2,3],[1,0,2]])
+    initial_numbers = np.array([[2, 3, 10], [1, 2, 2], [0, 1, 3], [2, 0, 5]])
+    print(matrix(initial_numbers, 4))

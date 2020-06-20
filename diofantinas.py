@@ -1,14 +1,14 @@
 import sys
 import math
+import time
 import numpy as np
 import aux
 import pylatex
 
 from restricted import Restricted
 
-initial_first_numbers=[0, 37, 89, 131, 401]
-initial_second_numbers=[0, 53, 117, 209, 300]
-
+initial_first_numbers = [0, 37, 89, 131, 401]
+initial_second_numbers = [0, 53, 117, 209, 300]
 
 """
     sequencia para os novos calculos
@@ -17,9 +17,24 @@ initial_second_numbers=[0, 53, 117, 209, 300]
     lista.append(aux) -> inserir o elemento
 
 """
+
+
 class Diofante:
 
     def __init__(self, argv):
+        """
+            Inicializacao:
+            argv = numeros a serem trabalhados
+            como parametro recebe uma quantidade de numeros inteiros, gerando uma lista a ser trabalhada,
+            e caso nao receba nenhuma sequencia de numeros interios, a
+            inicializacao da classe sera feita automaticamente com a sequencia de numeros 0, 37, 89, 131, 401
+
+            comandos anexados:
+            -s = utiliza automaticamente a sequencia de numeros 0, 53, 117, 209, 300
+            -l = apresenta os dados finais em um arquivo .tex
+            pdf = cria o arquivo .pdf gerado pelo arquivo .tex
+        """
+
         self.in_latex = False
         if "-l" in argv:
             self.in_latex = True
@@ -34,9 +49,10 @@ class Diofante:
             initial_numbers = initial_second_numbers
             argv.remove('-s')
 
-        self.with_tmp = False
+        self.with_time = False
         if '-t' in argv:
-            self.with_tmp = True
+            self.initial_time = time.time()
+            self.with_time = True
             argv.remove("-t")
 
         if len(argv) == 1:
@@ -48,34 +64,44 @@ class Diofante:
 
     def take_vec(self):
         """
-            Cria a matriz b de valores inteiros
+            Cria e retorna a matriz b de valores inteiros
         """
-        vec = np.array(aux.vec(self.numbers))#, self.with_tmp))
+        vec = aux.vec(self.numbers)
 
         return vec
 
     def take_matrix(self):
         """
-            Cria a matriz A de valores
+            Cria e retorna a matriz A de valores
         """
         matrix = aux.matrix(self.take_vec(), self.order)
 
         return matrix
 
     def det_matrix(self):
+        """
+            Retorna o determinante da matriz self.take_matrix()
+        """
         return np.linalg.det(self.take_matrix())
 
     def cofactor_matrix(self):
+        """
+            Retorna a matriz cofatora
+        """
         resp = []
         for i in range(self.order):
-            _matrix = aux.cofactor(self.take_matrix(), (i,self.order-1))
-            _resp = math.pow(-1,12) * np.linalg.det(_matrix) * math.pow(-1, i*(self.order-1))
+            _matrix = aux.cofactor(self.take_matrix(), (i, self.order - 1))
+            _resp = math.pow(-1, 12) * np.linalg.det(_matrix) * math.pow(-1, i * (self.order - 1))
 
             resp.append(int(round(_resp)))
 
         return resp
 
     def print_latex(self):
+        """
+            Gerador de arquivos .tex e .pdf
+        """
+
         pdf = pylatex.Document("default")
 
         with pdf.create(pylatex.Section("Equações Diofantinas")) as section:
@@ -87,7 +113,7 @@ class Diofante:
                 simbolo = "+"
                 if i == ultimo:
                     simbolo = "= 1"
-                eq.append(pylatex.NoEscape(" {}x_{} {}".format(i,cont, simbolo)))
+                eq.append(pylatex.NoEscape(" {}x_{} {}".format(i, cont, simbolo)))
                 cont = cont + 1
 
             section.append(pylatex.Math(data=eq))
@@ -113,13 +139,12 @@ class Diofante:
                 r = self.numbers[i] * self.cofactor_matrix()[i]
                 s = s + r
                 resp = "\t {}\t{} \t* \t{} \t= \t{} \t({})\n".format(
-                        i,
-                        self.numbers[i],
-                        self.cofactor_matrix()[i],
-                        r,
-                        s
-                    )
-                # section.append(pylatex.LineBreak())
+                    i,
+                    self.numbers[i],
+                    self.cofactor_matrix()[i],
+                    r,
+                    s
+                )
                 section.append(resp)
 
         if self.create_pdf:
@@ -128,6 +153,9 @@ class Diofante:
         pdf.generate_tex()
 
     def show(self):
+        """
+            Apresenta os resultados, exibindo-os na tela ou em arquivo .tex
+        """
 
         if self.in_latex:
             self.print_latex()
@@ -144,13 +172,16 @@ class Diofante:
                 r = self.numbers[i] * self.cofactor_matrix()[i]
                 s = s + r
                 resp = resp + "{} * {} = {} ({})\n".format(
-                        self.numbers[i],
-                        self.cofactor_matrix()[i],
-                        r,
-                        s
-                    )
+                    self.numbers[i],
+                    self.cofactor_matrix()[i],
+                    r,
+                    s
+                )
 
             print(resp)
+
+        if self.with_time:
+            print("Tempo de execucao: {}".format(time.time() - self.initial_time))
 
 if __name__ == '__main__':
     t = Diofante(sys.argv)
