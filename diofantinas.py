@@ -102,9 +102,14 @@ class Diofante:
             Gerador de arquivos .tex e .pdf
         """
 
-        pdf = pylatex.Document("default")
+        pdf = pylatex.Document(
+            "default"
+        )
 
-        with pdf.create(pylatex.Section("Equações Diofantinas")) as section:
+        with pdf.create(pylatex.Section(
+                "Equações Diofantinas"
+        )) as section:
+
             section.append("Equação:")
             ultimo = self.numbers[-1]
             eq = []
@@ -113,7 +118,11 @@ class Diofante:
                 simbolo = "+"
                 if i == ultimo:
                     simbolo = "= 1"
-                eq.append(pylatex.NoEscape(" {}x_{} {}".format(i, cont, simbolo)))
+                eq.append(
+                    pylatex.NoEscape(
+                        " {}x_{} {}".format(i, cont, simbolo)
+                    )
+                )
                 cont = cont + 1
 
             section.append(pylatex.Math(data=eq))
@@ -153,9 +162,9 @@ class Diofante:
         pdf.generate_tex()
 
     def show(self):
-        """
+        '''
             Apresenta os resultados, exibindo-os na tela ou em arquivo .tex
-        """
+        '''
 
         if self.in_latex:
             self.print_latex()
@@ -164,7 +173,10 @@ class Diofante:
             resp = "numeros = {}\n".format(self.numbers)
             resp = resp + "n = {}\n".format(self.order)
 
-            resp = resp + "\nb =\n{}\n\nA =\n{}\n".format(self.take_vec(), self.take_matrix())
+            resp = resp + "\nb =\n{}\n\nA =\n{}\n".format(
+                self.take_vec(),
+                self.take_matrix(),
+            )
             resp = resp + "Resposta =\n{} \n".format(self.cofactor_matrix())
             resp = resp + "Confirmando: \n"
             s = 0

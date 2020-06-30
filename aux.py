@@ -67,7 +67,6 @@ def matrix(b, n=4):
 
             m[i][v+n] = calc
 
-    print(m)
     m = np.delete(m, np.s_[0:-n], axis=1) # retirando as primeiras colunas, mantendo as n ultimas
 
     return m
