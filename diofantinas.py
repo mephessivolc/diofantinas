@@ -2,7 +2,7 @@ import sys
 import math
 import time
 import numpy as np
-import aux
+import auxiliar as aux
 import pylatex
 
 from restricted import Restricted
