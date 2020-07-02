@@ -91,8 +91,12 @@ class Diofante:
         resp = []
         len_b = len(self.take_vec())
         for i in range(self.order):
-            _matrix = aux.cofactor(self.take_matrix(), (i, self.order - 1))
-            _resp = math.pow(-1, len_b-1) * np.linalg.det(_matrix) * math.pow(-1, i * (self.order -1))
+            _matrix = aux.cofactor(self.take_matrix(),
+                    (i, self.order-1)
+                )
+            _resp = math.pow(-1, len_b-1)
+            _resp = _resp * np.linalg.det(_matrix)
+            _resp = _resp * math.pow(-1, i * (self.order-1))
             resp.append(int(round(_resp)))
 
         return resp
